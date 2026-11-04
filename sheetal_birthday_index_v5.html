@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#090d35">
+  <title>Happy Birthday, Sheetal 💗</title>
+
+  <style>
+    :root {
+      --pink: #ff65b5;
+      --gold: #ffd76a;
+      --white: #fff8ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: auto;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      margin: 0;
+      overflow: hidden;
+      color: var(--white);
+      font-family: Georgia, "Times New Roman", serif;
+      background: radial-gradient(
+        ellipse at 50% 25%,
+        #22245e 0,
+        #101642 42%,
+        #070b28 100%
+      );
+    }
+
+    .stars {
+      position: fixed;
+      z-index: -1;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.38;
+      background-image:
+        radial-gradient(#fff 1px, transparent 1.5px),
+        radial-gradient(#ffe59b 1px, transparent 1.5px);
+      background-size: 83px 83px, 127px 127px;
+      background-position: 0 0, 35px 50px;
+    }
+
+    .moon {
+      position: fixed;
+      top: 22px;
+      left: 22px;
+      color: var(--gold);
+      font-size: 27px;
+      filter: drop-shadow(0 0 10px #ffdf85);
+      pointer-events: none;
+    }
+
+    .moon.right {
+      right: 22px;
+      left: auto;
+    }
+
+    /* Each section fills the screen. Only the active section is displayed. */
+    .wrap {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      margin: 0;
+      padding: 0;
+      pointer-events: none;
+    }
+
+    .section {
+      position: absolute;
+      inset: 0;
+      display: none;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 24px 14px 38px;
+      pointer-events: auto;
+    }
+
+    .section.active {
+      display: flex;
+    }
+
+    /* Shared card styling keeps every screen aligned consistently. */
+    .card {
+      width: min(100%, 520px);
+      margin: auto;
+      padding: 30px 23px;
+      border: 1px solid #ffffff20;
+      border-radius: 25px;
+      text-align: center;
+      background: linear-gradient(145deg, #34366fdd, #1a2052ee);
+      box-shadow: 0 18px 55px #0006, inset 0 1px #ffffff24;
+      backdrop-filter: blur(8px);
+    }
+
+    .icon {
+      margin-bottom: 12px;
+      font-size: 55px;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      font: 11px Arial, sans-serif;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .script {
+      font-style: italic;
+      font-weight: normal;
+    }
+
+    .title {
+      margin: 12px 0;
+      color: #fff3fb;
+      font-size: clamp(31px, 8vw, 46px);
+      line-height: 1.12;
+      text-shadow: 0 3px 18px #ff65b555;
+    }
+
+    .pink {
+      color: #ff91cb;
+    }
+
+    .sub {
+      max-width: 390px;
+      margin: 12px auto 22px;
+      color: #e0ddff;
+      font: 14px/1.7 Arial, sans-serif;
+    }
+
+    .btn {
+      padding: 13px 23px;
+      border: 0;
+      border-radius: 999px;
+      color: #30103b;
+      background: linear-gradient(90deg, #ff65b5, #ff9bcf);
+      box-shadow: 0 7px 22px #ff65b544;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 7px;
+      margin: 20px 0;
+    }
+
+    .dots i {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ffffff55;
+    }
+
+    .number {
+      margin: 8px;
+      color: var(--gold);
+      font-size: 76px;
+      line-height: 1.1;
+      text-shadow: 0 0 22px #ffcf5b66;
+    }
+
+    .note {
+      max-width: 280px;
+      margin: 20px auto;
+      padding: 24px 18px;
+      border-radius: 9px;
+      color: #55405a;
+      background: #fff8e9;
+      box-shadow: 0 12px 30px #0004;
+      font-size: 18px;
+      line-height: 1.5;
+      transform: rotate(-2deg);
+      cursor: pointer;
+    }
+
+    .note small {
+      display: block;
+      margin-top: 12px;
+      color: #9a7891;
+      font: 11px Arial, sans-serif;
+    }
+
+    .cake,
+    .gift {
+      display: inline-block;
+      font-size: 95px;
+      cursor: pointer;
+      filter: drop-shadow(0 8px 12px #0005);
+      transition: transform 0.3s;
+    }
+
+    .cake:hover,
+    .gift:hover {
+      transform: translateY(-5px);
+    }
+
+    .candle-scene {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin: 12px 0 4px;
+    }
+
+    .flames {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      min-height: 32px;
+      font-size: 25px;
+      filter: drop-shadow(0 0 8px #ffb347);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    .flames.out {
+      opacity: 0;
+      transform: translateY(8px) scale(0.5);
+    }
+
+    .cake {
+      line-height: 1;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .cake-button {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .cake-button:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 8px;
+      border-radius: 12px;
+    }
+
+    .wish-next:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+      filter: grayscale(0.4);
+      box-shadow: none;
+    }
+
+    .letter {
+      padding: 22px;
+      border-radius: 15px;
+      color: #513b58;
+      background: #fff9ef;
+      box-shadow: 0 15px 35px #0005;
+      text-align: left;
+      font: 14px/1.8 Arial, sans-serif;
+    }
+
+    .letter h3 {
+      margin: 0 0 15px;
+      color: #a13e81;
+      text-align: center;
+      font: italic 24px Georgia, serif;
+    }
+
+    .letter p {
+      margin: 10px 0;
+    }
+
+    .balloons {
+      position: fixed;
+      bottom: -35px;
+      left: 0;
+      display: flex;
+      width: 100%;
+      justify-content: space-around;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .balloons span {
+      font-size: 34px;
+      filter: drop-shadow(0 0 8px #ffd66a66);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    .balloons span:nth-child(2n) {
+      animation-delay: 1.3s;
+    }
+
+    .balloons span:nth-child(3n) {
+      animation-delay: 2.4s;
+    }
+
+    .confetti {
+      position: fixed;
+      top: -20px;
+      z-index: 9;
+      pointer-events: none;
+      animation: fall 3.4s linear forwards;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 8px;
+      left: 0;
+      width: 100%;
+      padding: 0 12px;
+      color: #aaa9d0;
+      text-align: center;
+      font: 11px Arial, sans-serif;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    @media (max-height: 650px) {
+      .card {
+        padding: 22px 18px;
+      }
+
+      .icon {
+        font-size: 42px;
+      }
+
+      .title {
+        font-size: clamp(28px, 6vw, 38px);
+      }
+
+      .sub {
+        margin-bottom: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="moon" aria-hidden="true">☾</div>
+  <div class="moon right" aria-hidden="true">☾</div>
+
+  <div class="balloons" aria-hidden="true">
+    <span>🎈</span>
+    <span>🎈</span>
+    <span>🎈</span>
+    <span>🎈</span>
+    <span>🎈</span>
+  </div>
+
+  <main class="wrap">
+    <!-- Welcome screen -->
+    <section class="section active" id="home">
+      <div class="card">
+        <div class="icon">🧸</div>
+        <div class="eyebrow">A little surprise for you</div>
+        <h1 class="title script">
+          Hello, <span class="pink">Sheetal</span>!<br>
+          My Cutie Pie 💗
+        </h1>
+        <p class="sub">
+          A tiny corner of the internet, made to make your birthday
+          feel a little more special.
+        </p>
+        <button class="btn" onclick="goTo('number')">Let's begin ✨</button>
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      </div>
+    </section>
+
+    <!-- Age / birthday milestone screen -->
+    <section class="section" id="number">
+      <div class="card">
+        <div class="eyebrow">A special milestone</div>
+        <h2 class="title script">14 years of smiles,<br>laughter & magic</h2>
+        <div class="number">14 💗</div>
+        <p class="sub">
+          Fourteen years of being wonderfully you!
+          Here's to more smiles, more laughter, and a year filled
+          with lovely little moments.
+        </p>
+        <button class="btn" onclick="goTo('reasons')">Continue →</button>
+      </div>
+    </section>
+
+    <!-- Compliments screen -->
+    <section class="section" id="reasons">
+      <div class="card">
+        <div class="eyebrow">A little appreciation</div>
+        <h2 class="title script">12 Things I Love<br>About You</h2>
+        <p class="sub">Tap the note to reveal a little compliment. 💌</p>
+        <div class="note" id="reason" onclick="nextReason()">
+          Your smile makes ordinary moments brighter.
+          <small>Tap for the next one ✨</small>
+        </div>
+        <button class="btn" onclick="goTo('wish')">Next surprise →</button>
+      </div>
+    </section>
+
+    <!-- Birthday cake screen -->
+    <section class="section" id="wish">
+      <div class="card">
+        <div class="eyebrow">Make a wish!</div>
+        <h2 class="title script">Close your eyes<br>and make a wish</h2>
+        <div class="candle-scene">
+          <div class="flames" id="flames" aria-label="Three lit candle flames">
+            <span>🔥</span><span>🔥</span><span>🔥</span>
+          </div>
+          <button
+            class="cake-button"
+            id="cakeButton"
+            type="button"
+            onclick="blowOutCandles()"
+            aria-label="Blow out the birthday candles"
+          >
+            <span class="cake" aria-hidden="true">🎂</span>
+          </button>
+        </div>
+        <p class="sub" id="wishText" aria-live="polite">
+          Close your eyes, make a wish, then tap the cake to blow out the candles!
+        </p>
+        <button class="btn wish-next" id="wishNext" onclick="goTo('letter')" disabled>
+          Blow out the candles first 🕯️
+        </button>
+      </div>
+    </section>
+
+    <!-- Birthday letter screen -->
+    <section class="section" id="letter">
+      <div class="card">
+        <div class="eyebrow">A note from the heart</div>
+        <div class="letter">
+          <h3>My Dear Sheetal,</h3>
+          <p>Happy Birthday, Cutie Pie! 💗</p>
+          <p>
+            I hope your day is filled with laughter, little surprises,
+            warm hugs, and all the things that make you happy.
+          </p>
+          <p>
+            Keep being your lovely self. You deserve kindness,
+            happiness, and beautiful moments—not just today,
+            but every day.
+          </p>
+          <p>Wishing you the happiest birthday and an amazing year ahead!</p>
+          <p style="text-align: right; font-style: italic">With lots of wishes ✨</p>
+        </div>
+        <p class="sub">There's one last surprise waiting for you…</p>
+        <button class="btn" onclick="goTo('gift')">Open your gift 🎁</button>
+      </div>
+    </section>
+
+    <!-- Final gift screen -->
+    <section class="section" id="gift">
+      <div class="card">
+        <div class="eyebrow">Just for you</div>
+        <h2 class="title script">
+          A little gift,<br><span class="pink">Cutie Pie</span> 💗
+        </h2>
+        <div class="gift" onclick="openGift()" id="giftIcon">🎁</div>
+        <p class="sub" id="giftText">Tap to unwrap your surprise!</p>
+        <button class="btn hidden" id="again" onclick="celebrateAgain()">
+          Celebrate again 🎉
+        </button>
+      </div>
+    </section>
+
+    <div class="footer">Made with 💗 for Sheetal · Happy Birthday, Cutie Pie</div>
+  </main>
+
+  <script>
+    // Compliments shown one at a time when the note is tapped.
+    const reasons = [
+      "Your smile makes ordinary moments brighter.",
+      "You have a way of making people feel special.",
+      "Your kindness deserves to be celebrated.",
+      "You bring your own sparkle wherever you go.",
+      "Your laugh is contagious—in the best way.",
+      "You make the little things feel meaningful.",
+      "You are wonderfully, uniquely you.",
+      "You deserve every bit of happiness coming your way.",
+      "You have a beautiful way of seeing the world.",
+      "You make this world a little sweeter.",
+      "You are more gorgeous than you sometimes realise.",
+      "Simply because you are Sheetal. 💗"
+    ];
+
+    let reasonIndex = 0;
+    let candlesBlownOut = false;
+    let giftUnwrapped = false;
+
+    // Show one screen at a time and keep it centered in the viewport.
+    function goTo(sectionId) {
+      const nextSection = document.getElementById(sectionId);
+      if (!nextSection) return;
+
+      document.querySelectorAll(".section").forEach((section) => {
+        section.classList.remove("active");
+      });
+
+      nextSection.classList.add("active");
+      nextSection.scrollTop = 0;
+    }
+
+    function nextReason() {
+      reasonIndex = (reasonIndex + 1) % reasons.length;
+
+      document.getElementById("reason").innerHTML =
+        `${reasons[reasonIndex]}<small>${reasonIndex + 1} / 12 · Tap for the next one ✨</small>`;
+    }
+
+    function blowOutCandles() {
+      if (candlesBlownOut) return;
+
+      candlesBlownOut = true;
+      const flames = document.getElementById("flames");
+      flames.classList.add("out");
+      flames.setAttribute("aria-label", "Candles blown out");
+
+      document.getElementById("wishText").textContent =
+        "You did it, Cutie! 💗 May your birthday wish come true.";
+
+      const nextButton = document.getElementById("wishNext");
+      nextButton.disabled = false;
+      nextButton.textContent = "Read your letter 💌";
+
+      document.getElementyI("cakeButton").setAttribute("aria-label", "The candles have been blown out");
+      showConfetti();
+    }
+
+    function openGift() {
+      if (giftUnwrapped) return;
+
+      giftUnwrapped = true;
+      document.getElementById("giftIcon").textContent = "💝";
+      document.getElementById("giftText").textContent =
+        "Your gift is a reminder: you deserve to feel loved, appreciated, and celebrated. Happy Birthday, Sheetal!";
+      document.getElementById("again").classList.remove("hidden");
+      showConfetti();
+    }
+
+    function showConfetti() {
+      const symbols = ["✨", "💗", "🌸", "⭐", "🎉", "💛"];
+
+      for (let index = 0; index < 42; index += 1) {
+        const piece = document.createElement("span");
+        piece.className = "confetti";
+        piece.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        piece.style.left = `${Math.random() * 100}vw`;
+        piece.style.fontSize = `${14 + Math.random() * 18}px`;
+        piece.style.animationDuration = `${2 + Math.random() * 2}s`;
+
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 4300);
+      }
+    }
+
+    function celebrateAgain() {
+      showConfetti();
+    }
+  </script>
+</body>
+</html>
