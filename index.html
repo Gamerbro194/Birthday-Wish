@@ -679,7 +679,9 @@
         acceptNode(node) {
           if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
           const parent = node.parentElement;
-          if (!parent || parent.closest("button, .photo-slot, .number, .note, .gift, script, style")) {
+          // Only animate subtitles and the rotating compliment note.
+          // Headings, titles, labels, and decorative text stay visible immediately.
+          if (!parent || !parent.closest(".sub, .note, .letter p")) {
             return NodeFilter.FILTER_REJECT;
           }
           return NodeFilter.FILTER_ACCEPT;
@@ -712,6 +714,20 @@
       typeNext();
     }
 
+    // Type text added after an interaction (cake reveal / gift unwrap).
+    function typeTextElement(element, text, speed = 27) {
+      stopTyping();
+      element.textContent = "";
+      const chars = Array.from(text);
+      let index = 0;
+      const typeNext = () => {
+        if (index >= chars.length) return;
+        element.textContent += chars[index++];
+        if (index < chars.length) typingTimers.push(setTimeout(typeNext, speed));
+      };
+      typeNext();
+    }
+
     // Show one screen at a time and type its text as it appears.
     function goTo(sectionId) {
       const nextSection = document.getElementById(sectionId);
@@ -735,9 +751,30 @@
 
     function nextReason() {
       reasonIndex = (reasonIndex + 1) % reasons.length;
+      const note = document.getElementById("reason");
+      const message = `${reasons[reasonIndex]}<small>${reasonIndex + 1} / 12 · Tap for the next one ✨</small>`;
+      note.innerHTML = message;
 
-      document.getElementById("reason").innerHTML =
-        `${reasons[reasonIndex]}<small>${reasonIndex + 1} / 12 · Tap for the next one ✨</small>`;
+      // Type each newly revealed compliment just like the page subtitles.
+      stopTyping();
+      const targets = [];
+      const walker = document.createTreeWalker(note, NodeFilter.SHOW_TEXT);
+      while (walker.nextNode()) {
+        if (walker.currentNode.nodeValue.trim()) targets.push(walker.currentNode);
+      }
+      const originals = targets.map((node) => node.nodeValue);
+      targets.forEach((node) => { node.nodeValue = ""; });
+      let n = 0;
+      let c = 0;
+      const typeNext = () => {
+        if (n >= targets.length) return;
+        const chars = Array.from(originals[n]);
+        targets[n].nodeValue += chars[c] || "";
+        c += 1;
+        if (c >= chars.length) { n += 1; c = 0; }
+        if (n < targets.length) typingTimers.push(setTimeout(typeNext, 27));
+      };
+      typeNext();
     }
 
     function blowOutCandles() {
@@ -748,8 +785,10 @@
       flames.classList.add("out");
       flames.setAttribute("aria-label", "Candles blown out");
 
-      document.getElementById("wishText").textContent =
-        "You did it, Sheetal! 💗 May your birthday wish come true.";
+      typeTextElement(
+        document.getElementById("wishText"),
+        "You did it, Sheetal! 💗 May your birthday wish come true."
+      );
 
       const nextButton = document.getElementById("wishNext");
       nextButton.disabled = false;
@@ -765,8 +804,10 @@
 
       giftUnwrapped = true;
       document.getElementById("giftIcon").textContent = "💝";
-      document.getElementById("giftText").textContent =
-        "Your gift is a reminder: you deserve to feel loved, appreciated, and celebrated. Happy Birthday, Sheetal!";
+      typeTextElement(
+        document.getElementById("giftText"),
+        "Your gift is a reminder: you deserve to feel loved, appreciated, and celebrated. Happy Birthday, Sheetal!"
+      );
       document.getElementById("again").classList.remove("hidden");
       document.getElementById("bouquetNext").classList.remove("hidden");
       document.querySelector("#gift .page-photo").classList.remove("hidden");
