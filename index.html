@@ -660,18 +660,78 @@
     let candlesBlownOut = false;
     let giftUnwrapped = false;
 
-    // Show one screen at a time and keep it centered in the viewport.
+    // Type the page copy in, preserving inline formatting and line breaks.
+    let typingTimers = [];
+    const originalText = new WeakMap();
+
+    function stopTyping() {
+      typingTimers.forEach((timer) => clearTimeout(timer));
+      typingTimers = [];
+    }
+
+    function typePage(section) {
+      stopTyping();
+      const card = section.querySelector(".card");
+      if (!card) return;
+
+      const textNodes = [];
+      const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT, {
+        acceptNode(node) {
+          if (!node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          const parent = node.parentElement;
+          if (!parent || parent.closest("button, .photo-slot, .number, .note, .gift, script, style")) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      });
+
+      while (walker.nextNode()) textNodes.push(walker.currentNode);
+      const originals = textNodes.map((node) => {
+        if (!originalText.has(node)) originalText.set(node, node.nodeValue);
+        return originalText.get(node);
+      });
+      textNodes.forEach((node) => {
+        node.nodeValue = "";
+      });
+
+      let nodeIndex = 0;
+      let charIndex = 0;
+      const typeNext = () => {
+        if (nodeIndex >= textNodes.length) return;
+        const chars = Array.from(originals[nodeIndex]);
+        textNodes[nodeIndex].nodeValue += chars[charIndex] || "";
+        charIndex += 1;
+        if (charIndex >= chars.length) {
+          nodeIndex += 1;
+          charIndex = 0;
+        }
+        const timer = setTimeout(typeNext, 27);
+        typingTimers.push(timer);
+      };
+      typeNext();
+    }
+
+    // Show one screen at a time and type its text as it appears.
     function goTo(sectionId) {
       const nextSection = document.getElementById(sectionId);
       if (!nextSection) return;
 
+      stopTyping();
       document.querySelectorAll(".section").forEach((section) => {
         section.classList.remove("active");
       });
 
       nextSection.classList.add("active");
       nextSection.scrollTop = 0;
+      typePage(nextSection);
     }
+
+    // Start the welcome screen's typing effect on initial page load.
+    window.addEventListener("DOMContentLoaded", () => {
+      const home = document.getElementById("home");
+      if (home) typePage(home);
+    });
 
     function nextReason() {
       reasonIndex = (reasonIndex + 1) % reasons.length;
